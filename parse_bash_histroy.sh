@@ -31,7 +31,7 @@ EMAIL_TO='email@xrmx.co.uk'
 EMAIL_SUBJECT='Bash History'
 
 ##################################################################
-# Do not edit the below lines unless you know what you are doing #
+# Do not edit the lines below unless you know what you are doing #
 ##################################################################
 
 # Define variables we will be using
