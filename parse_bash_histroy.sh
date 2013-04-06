@@ -1,5 +1,13 @@
 #!/bin/bash
 #
+# DESCRIPTION
+# ===========
+# Parse bash history and email script.
+# 
+# Author  : Greg Colley
+# Date    : 06.04.2013
+# Version : 1.0
+
 # SETUP 
 # =====
 # To setup your bash_history file to log timestamps, you need to set one environment variable HISTTIMEFORMAT. 
