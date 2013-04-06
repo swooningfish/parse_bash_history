@@ -56,8 +56,7 @@ then
 	exit $E_NO_ARGS
 fi
 
-echo "$1" | grep '^[a-zA-Z0-9]*@[a-zA-Z0-9]*\.[a-zA-Z0-9]*$'
-if [ $? -eq 0 ]
+if [[ "$1" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$ ]]
 then
     echo "Email address looks valid"
     # Set the param to the email_to variable
