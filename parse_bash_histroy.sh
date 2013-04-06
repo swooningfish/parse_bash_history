@@ -6,7 +6,7 @@
 # 
 # Author  : Greg Colley
 # Date    : 06.04.2013
-# Version : 1.0
+# Version : 1.1
 
 # SETUP 
 # =====
@@ -98,7 +98,7 @@ do
 		LINES_LOGGED=LINES_LOGGED+1
    	else
 		# Check if the command has a # at the beginning (assumed it's a timestamp)
-		TMP_STRING=${line:0:1}
+		TMP_STRING=${LINE:0:1}
  		if [[ "$TMP_STRING" == '#' ]]
 		then 
 			# Get the time stamp 
@@ -114,6 +114,7 @@ do
 done < $FILENAME
 
 # Only email if we need to
+echo "Lines Logged = $LINES_LOGGED"
 if [ "$LINES_LOGGED" > '0' ]
 then 
 
