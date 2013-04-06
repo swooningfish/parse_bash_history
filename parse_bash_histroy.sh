@@ -14,9 +14,10 @@
 # Please note some systems may already be configured to have timestamps on the bash_history file.
 #
 
-# REQUIRMENTS
+# REQUIREMENTS
 # ===========
-# bc required for the elapsed time calculation of the script, you can uncomment out this if you do not need it
+# bc is required for the elapsed time calculation of the script, you can comment out this if you do to wish to use it
+# mail - mail is required for sending emails
 
 # CONFIGURATION
 # =============
