@@ -33,7 +33,7 @@
 filename='/root/.bash_history'
 
 # Email to address
-EMAIL_TO='email@xrmx.co.uk'
+EMAIL_TO='your@email.address.com'
 
 # Email subject 
 EMAIL_SUBJECT='Bash History'
