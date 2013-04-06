@@ -27,13 +27,15 @@
 # bc is required for the elapsed time calculation of the script, you can comment out this if you do to wish to use it
 # mail - mail is required for sending emails
 
+# USAGE
+# =====
+# To use this script type './parse_bash_history.sh email@address.com' 
+
 # CONFIGURATION
 # =============
-# If you need to change the location of the .bahs_history file then modify the line below
-filename='/root/.bash_history'
 
-# Email to address
-EMAIL_TO='your@email.address.com'
+# Location of the bash_history file you wish to parse
+FILENAME='/root/.bash_history'
 
 # Email subject 
 EMAIL_SUBJECT='Bash History'
@@ -42,66 +44,98 @@ EMAIL_SUBJECT='Bash History'
 # Do not edit the lines below unless you know what you are doing #
 ##################################################################
 
+E_NO_ARGS=65
+
+if [ $# -eq 0 ]  	# Must have command-line args to create the reposotry.
+then
+	echo "  __________________________________________"
+	echo "  You must specify email address to send to "
+	echo "  e.g. "
+	echo "  ./parse_bash_histroy.sh name@domain.com"
+	echo "  __________________________________________"
+	exit $E_NO_ARGS
+fi
+
+echo "$1" | grep '^[a-zA-Z0-9]*@[a-zA-Z0-9]*\.[a-zA-Z0-9]*$'
+if [ $? -eq 0 ]
+then
+    echo "Email address looks valid"
+    # Set the param to the email_to variable
+    EMAIL_TO=$1
+else
+    echo "Invalid email address, please check and try again"
+    exit 0
+fi
+
 # Define variables we will be using
-datestamp=`date +%c`
-lognextline='0'
-lineslogged=0
+DATE_STAMP=`date +%c`
+LOG_NEXT_LINE='0'
+TIME_STAMP=0
+LINES_LOGGED=0
 SCRIPTPATH=`dirname $0`
-since_id=`cat ${SCRIPTPATH}/since_id`
+SINCE_ID=`cat ${SCRIPTPATH}/since_id`
+TMP_STRING='';
 
 # Start timing
-res1=$(date +%s.%N)
+TIME1=$(date +%s.%N)
 
 # Empty the mailfile
-echo "Bash history for ${datestamp}" > ${SCRIPTPATH}/mailfile
+echo "Bash history for ${DATE_STAMP}" > ${SCRIPTPATH}/mailfile
 echo "" >> ${SCRIPTPATH}/mailfile
 
 # Loop around all of the lines in the bash_history file
-while read line; do
-
+while read LINE 
+do
 	# Check if we are logging the line (assuming all timestamps are before commands)
-	if [[ "$lognextline" == '1' ]]; then
-		
+	if [[ "$LOG_NEXT_LINE" == '1' ]]
+	then
 		# Output the line to the file we will mail
-		echo "`date -d @$timestamp +%c` - $line" >> ${SCRIPTPATH}/mailfile
-                # reset the lognextline flag so we can check if it's a timestamp again
-		lognextline='0'
+		echo "`date -d @$TIME_STAMP +%c` - $LINE" >> ${SCRIPTPATH}/mailfile
+        
+		# reset the LOG_NEXT_LINE flag so we can check if it's a timestamp again
+		LOG_NEXT_LINE='0'
+
 		# increment the counter so we know how many lines have been logged
-		lineslogged=lineslogged+1
+		LINES_LOGGED=LINES_LOGGED+1
    	else
 		# Check if the command has a # at the beginning (assumed it's a timestamp)
-		tmpstring=${line:0:1}
-     		if [[ "$tmpstring" == '#' ]]; then 
-           		
-			# Get the timestamp 
-			timestamp=${line:1:11}
+		TMP_STRING=${line:0:1}
+ 		if [[ "$TMP_STRING" == '#' ]]
+		then 
+			# Get the time stamp 
+			TIME_STAMP=${LINE:1:11}
 			
 			# Check if we want to log this line as we are only interested in command after the  
-			if [[ "$timestamp" > "$since_id" ]]; then 
-				lognextline='1'
+			if [[ "$TIME_STAMP" > "$SINCE_ID" ]]
+			then 
+				LOG_NEXT_LINE='1'
 			fi
-    		fi
+		fi
    	fi
-done < $filename
+done < $FILENAME
 
-if [ "$lineslogged" == '0' ]; then 
-	echo "No new commands have been executed by the root user." >> ${SCRIPTPATH}/mailfile
-fi 
+# Only email if we need to
+if [ "$LINES_LOGGED" > '0' ]
+then 
+
+	# End timing
+	TIME2=$(date +%s.%N)
+
+	# Email signature
+	echo "" >> ${SCRIPTPATH}/mailfile
+	echo "--" >> ${SCRIPTPATH}/mailfile
+	echo "parse_bash_history.sh" >> ${SCRIPTPATH}/mailfile
+	echo "Script Execution time $(echo "$TIME1 - $TIME2"|bc )" >> ${SCRIPTPATH}/mailfile
+
+	# Mail the file to the admin for a audit log of all bash_history commands
+	cat ${SCRIPTPATH}/mailfile | mail -s "${EMAIL_SUBJECT}" ${EMAIL_TO}
+
+else
+	echo "Nothing to email";
+fi
+
 # Save the timestamp so we know where we left off
-echo $timestamp > ${SCRIPTPATH}/since_id
-
-# End timing
-res2=$(date +%s.%N)
-
-
-# Email signature
-echo "" >> ${SCRIPTPATH}/mailfile
-echo "--" >> ${SCRIPTPATH}/mailfile
-echo "parse_bash_history.sh" >> ${SCRIPTPATH}/mailfile
-echo "Script Execution time $(echo "$res2 - $res1"|bc )" >> ${SCRIPTPATH}/mailfile
-
-# Mail the file to the admin for a audit log of all bash_history commands
-cat ${SCRIPTPATH}/mailfile | mail -s "${EMAIL_SUBJECT}" ${EMAIL_TO}
+echo $TIME_STAMP > ${SCRIPTPATH}/since_id
 
 # Remove the temp mailfile to keep things clean
 rm ${SCRIPTPATH}/mailfile
