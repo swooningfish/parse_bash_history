@@ -64,14 +64,11 @@ while read line; do
 		# Check if the command has a # at the beginning (assumed it's a timestamp)
 		tmpstring=${line:0:1}
      		if [[ "$tmpstring" == '#' ]]; then 
-           		#echo "timestamp is :-"
+           		
 			# Get the timestamp 
 			timestamp=${line:1:11}
-			#echo $timestamp
 			
-			#echo $since_id
-			# Check if we want to log this line as we are only intrested in command after the 
-			# last timestamp 
+			# Check if we want to log this line as we are only interested in command after the  
 			if [[ "$timestamp" > "$since_id" ]]; then 
 				lognextline='1'
 			fi
