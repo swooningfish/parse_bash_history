@@ -86,7 +86,7 @@ echo $timestamp > ${SCRIPTPATH}/since_id
 res2=$(date +%s.%N)
 
 
-# Email signiture
+# Email signature
 echo "" >> ${SCRIPTPATH}/mailfile
 echo "--" >> ${SCRIPTPATH}/mailfile
 echo "parse_bash_history.sh" >> ${SCRIPTPATH}/mailfile
