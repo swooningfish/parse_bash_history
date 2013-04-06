@@ -93,9 +93,6 @@ echo "" >> ${SCRIPTPATH}/mailfile
 echo "--" >> ${SCRIPTPATH}/mailfile
 echo "parse_bash_history.sh" >> ${SCRIPTPATH}/mailfile
 echo "Script Execution time $(echo "$res2 - $res1"|bc )" >> ${SCRIPTPATH}/mailfile
-echo "" >> ${SCRIPTPATH}/mailfile
-echo "" >> ${SCRIPTPATH}/mailfile
-echo "" >> ${SCRIPTPATH}/mailfile
 
 # Mail the file to the admin for a audit log of all bash_history commands
 cat ${SCRIPTPATH}/mailfile | mail -s "${EMAIL_SUBJECT}" ${EMAIL_TO}
