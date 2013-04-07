@@ -6,7 +6,7 @@
 # 
 # Author  : Greg Colley
 # Date    : 06.04.2013
-# Version : 1.1
+# Version : 1.3
 
 # SETUP 
 # =====
@@ -67,6 +67,7 @@ else
 fi
 
 # Define variables we will be using
+HOST_NAME=`hostname`
 DATE_STAMP=`date +%c`
 LOG_NEXT_LINE='0'
 TIME_STAMP=0
@@ -79,7 +80,7 @@ TMP_STRING='';
 TIME1=$(date +%s.%N)
 
 # Empty the mailfile
-echo "Bash history for ${DATE_STAMP}" > ${SCRIPTPATH}/mailfile
+echo "Bash history for ${HOST_NAME} at ${DATE_STAMP}" > ${SCRIPTPATH}/mailfile
 echo "" >> ${SCRIPTPATH}/mailfile
 
 # Loop around all of the lines in the bash_history file
@@ -95,7 +96,7 @@ do
 		LOG_NEXT_LINE='0'
 
 		# increment the counter so we know how many lines have been logged
-		LINES_LOGGED=LINES_LOGGED+1
+		let LINES_LOGGED=LINES_LOGGED+1
    	else
 		# Check if the command has a # at the beginning (assumed it's a timestamp)
 		TMP_STRING=${LINE:0:1}
@@ -115,7 +116,7 @@ done < $FILENAME
 
 # Only email if we need to
 echo "Lines Logged = $LINES_LOGGED"
-if [ "$LINES_LOGGED" > '0' ]
+if [ $LINES_LOGGED != 0 ]
 then 
 
 	# End timing
