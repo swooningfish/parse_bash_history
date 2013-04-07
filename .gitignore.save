@@ -1,7 +1,0 @@
-#ignore thumbnails created by windows
-Thumbs.db
-#ignore the following directories
-database/backups/* httpdocs/application/cache/* httpdocs/imagecache/* httpdocs/application/logs/* subdomain/* logs/*
-#misc
-.DS_Store? ehthumbs.db _notes dwsync.xml .svn .hg
-!.gitignore
