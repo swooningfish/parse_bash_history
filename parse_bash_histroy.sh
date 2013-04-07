@@ -73,8 +73,15 @@ LOG_NEXT_LINE='0'
 TIME_STAMP=0
 LINES_LOGGED=0
 SCRIPTPATH=`dirname $0`
-SINCE_ID=`cat ${SCRIPTPATH}/since_id`
+SINCE_ID=0
 TMP_STRING='';
+
+# Try and load the last since_id if it exists
+if [ -f ${SCRIPTPATH}/since_id ]
+then 
+	SINCE_ID=`cat ${SCRIPTPATH}/since_id`
+fi
+
 
 # Start timing
 TIME1=$(date +%s.%N)
