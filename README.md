@@ -3,7 +3,7 @@ parse_bash_history
 <pre>
  Author  : Greg Colley
  Date    : 06.04.2013
- Version : 1.0
+ Version : 1.3
 </pre>
 
 Parsing the .bash_history file and then emailing any commands run from the last time. 
